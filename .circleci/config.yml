@@ -22,6 +22,3 @@ workflows:
     build-and-test:
       jobs:
         - build-and-test
-        -  build:
-          post-steps:
-            - jira/notify
