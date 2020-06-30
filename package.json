@@ -4,7 +4,12 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha ./test/*"
+    "test": "mocha ./test/*",
+    "make-migration": "knex migrate:make",
+    "migrate": "knex migrate:latest",
+    "make-seed": "knex seed:make",
+    "seed": "knex seed:run",
+    "reset-db": "knex migrate:rollback true && npm run migrate && npm run seed"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
