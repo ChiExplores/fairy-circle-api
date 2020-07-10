@@ -3,13 +3,14 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const cors = require("cors");
 // init db connection
 require("./data");
 
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
+const authRouter = require("./routes/auth");
 
-require('dotenv').config()
+require("dotenv").config();
 const app = express();
 
 app.use(logger("dev"));
@@ -18,8 +19,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// CORS protect all routes
+const allowedOrigins = process.env.CLIENT_ADDRESS;
+const corsOptions = {
+  origin: allowedOrigins,
+  credentials: true,
+  method: "GET,POST",
+};
+app.use("*", cors(corsOptions));
+// TODO add handling of /graphql GET requests for graphiql
+
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
