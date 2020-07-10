@@ -8,7 +8,9 @@ const cors = require("cors");
 require("./data");
 
 const indexRouter = require("./routes/index");
+const graphqlRouter = require("./routes/graphql");
 const authRouter = require("./routes/auth");
+
 
 require("dotenv").config();
 const app = express();
@@ -30,7 +32,9 @@ app.use("*", cors(corsOptions));
 // TODO add handling of /graphql GET requests for graphiql
 
 app.use("/", indexRouter);
+app.use("/graphql", graphqlRouter);
 app.use("/auth", authRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
