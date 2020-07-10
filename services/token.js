@@ -17,7 +17,9 @@ const signToken = (res, user) => {
   return res.cookie("token", token, {
     expires: new Date(Date.now() + expiration),
     domain: process.env.DOMAIN,
+    // prevents cookie from being sent in unencrypted request
     secure: process.env.NODE_ENV === "production" ? true : false,
+    // prevents frontend code from accessing cookie (where browsers allow)
     httpOnly: true,
     sameSite: "Strict",
   });
@@ -28,11 +30,7 @@ const verifyToken = (token) => {
     process.env.NODE_ENV === "test"
       ? process.env.TEST_SECRET
       : process.env.JWT_SECRET;
-  const decoded = jwt.verify(token, secret, (e, decoded) => {
-    if (e) return e;
-    return decoded;
-  });
-  return decoded;
+  return jwt.verify(token, secret, (e, decoded) => (e ? e : decoded));
 };
 
 module.exports = { signToken, verifyToken };

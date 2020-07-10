@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const cors = require("cors");
 // init db connection
 require("./data");
 
@@ -17,6 +18,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+// CORS protect all routes
+const allowedOrigins = process.env.CLIENT_ADDRESS;
+const corsOptions = {
+  origin: allowedOrigins,
+  credentials: true,
+  method: "GET,POST",
+};
+app.use("*", cors(corsOptions));
+// TODO add handling of /graphql GET requests for graphiql
 
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
